@@ -1,0 +1,10 @@
+{
+  "name": "@g-stack/g-stack-e2e",
+  "version": "0.0.1",
+  "private": true,
+  "nx": {
+    "implicitDependencies": [
+      "@g-stack/g-stack"
+    ]
+  }
+}
