@@ -2,9 +2,8 @@
   "name": "@g-stack/g-stack-e2e",
   "version": "0.0.1",
   "private": true,
-  "nx": {
-    "implicitDependencies": [
-      "@g-stack/g-stack"
-    ]
+  "scripts": {
+    "test": "pnpm --filter @g-stack/g-stack build && playwright test --project chromium --project firefox",
+    "test:ui": "playwright test --ui"
   }
 }

@@ -1,47 +1,48 @@
-import nx from '@nx/eslint-plugin';
+import js from '@eslint/js';
+import reactPlugin from 'eslint-plugin-react';
+import reactHooks from 'eslint-plugin-react-hooks';
+import jsxA11y from 'eslint-plugin-jsx-a11y';
+import * as importPlugin from 'eslint-plugin-import';
+import tseslint from 'typescript-eslint';
 
 export default [
-  ...nx.configs['flat/base'],
-  ...nx.configs['flat/typescript'],
-  ...nx.configs['flat/javascript'],
+  { ignores: ['**/dist', '**/.vite', '**/test-output'] },
+  js.configs.recommended,
+  ...tseslint.configs.recommended,
+  reactPlugin.configs.flat.recommended,
   {
-    ignores: [
-      '**/dist',
-      '**/vite.config.*.timestamp*',
-      '**/vitest.config.*.timestamp*',
-      '**/test-output',
-    ],
-  },
-  {
-    files: ['**/*.ts', '**/*.tsx', '**/*.js', '**/*.jsx'],
+    plugins: {
+      'react-hooks': reactHooks,
+      'jsx-a11y': jsxA11y,
+      import: importPlugin,
+    },
     rules: {
-      '@nx/enforce-module-boundaries': [
-        'error',
-        {
-          enforceBuildableLibDependency: true,
-          allow: ['^.*/eslint(\\.base)?\\.config\\.[cm]?[jt]s$'],
-          depConstraints: [
-            {
-              sourceTag: '*',
-              onlyDependOnLibsWithTags: ['*'],
-            },
-          ],
-        },
-      ],
+      'react/react-in-jsx-scope': 'off',
+      'react-hooks/rules-of-hooks': 'error',
+      'react-hooks/exhaustive-deps': 'warn',
+    },
+    settings: {
+      react: { version: 'detect' },
     },
   },
+  // Node/CommonJS config files
   {
     files: [
-      '**/*.ts',
-      '**/*.tsx',
-      '**/*.cts',
-      '**/*.mts',
-      '**/*.js',
-      '**/*.jsx',
-      '**/*.cjs',
-      '**/*.mjs',
+      '**/*.config.{js,cjs,mjs}',
+      '**/*config.{js,cjs,mjs}',
+      '**/postcss.config.js',
+      '**/tailwind.config.js',
     ],
-    // Override or add rules here
-    rules: {},
+    languageOptions: {
+      sourceType: 'commonjs',
+      globals: {
+        require: 'readonly',
+        module: 'readonly',
+        __dirname: 'readonly',
+      },
+    },
+    rules: {
+      '@typescript-eslint/no-require-imports': 'off',
+    },
   },
 ];
